@@ -34,6 +34,11 @@ public class UserService {
         return modelMapper.map(user, UserDTO.class);
     }
 
+    public UserDTO getUserByUserIdNemail(int userId,String email){
+        User user = user_repo.getUserByuserIdNemail(userId,email);
+        return  modelMapper.map(user, UserDTO.class);
+    }
+
     public UserDTO updateUserById(int userId, UserDTO updatedUserDTO){
         User exsitingUser = user_repo.getUserByuserId(userId);
         if(exsitingUser != null){
@@ -46,8 +51,14 @@ public class UserService {
         }
     }
 
-    public UserDTO getUserByUserIdNemail(int userId,String email){
-        User user = user_repo.getUserByuserIdNemail(userId,email);
-        return  modelMapper.map(user, UserDTO.class);
+   public boolean deleteUserById(int userId){
+        if(user_repo.existsById(userId)){
+            user_repo.deleteById(userId);
+            return  true;
+        }else{
+            return false;
+        }
     }
+
+
 }

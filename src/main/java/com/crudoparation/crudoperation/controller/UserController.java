@@ -3,6 +3,7 @@ package com.crudoparation.crudoperation.controller;
 import com.crudoparation.crudoperation.dto.UserDTO;
 import com.crudoparation.crudoperation.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,5 +38,15 @@ public class UserController {
     @PutMapping("/updateUserById/{userId}")
     public UserDTO updateUserById(@PathVariable  int userId, @RequestBody UserDTO updatedUserDTO){
         return userService.updateUserById(userId,updatedUserDTO);
+    }
+
+    @DeleteMapping("/deleteUserById/{userId}")
+    public ResponseEntity<String> deleteUserById(@PathVariable int userId) {
+        boolean deleted = userService.deleteUserById(userId);
+        if (deleted) {
+            return ResponseEntity.ok("User with ID " + userId + " has been deleted successfully.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
