@@ -9,4 +9,5 @@ public class VarList {
     public static final String RSP_ERROR = "05";
     public static final String RSP_DUPLICATED = "06";
     public static final String RSP_FAIL = "07";
+    public static final String RSP_DATA_NULL = "08";
 }

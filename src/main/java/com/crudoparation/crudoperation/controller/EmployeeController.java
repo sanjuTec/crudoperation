@@ -5,10 +5,12 @@ import com.crudoparation.crudoperation.dto.ResponseDTO;
 import com.crudoparation.crudoperation.entity.Employee;
 import com.crudoparation.crudoperation.service.EmployeeService;
 import com.crudoparation.crudoperation.util.VarList;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.PrivateKey;
@@ -17,14 +19,17 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "api/v1/employee")
+@Validated // Enables validation for the controller
+@CrossOrigin(origins = "*")
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
     @Autowired
     private ResponseDTO responseDTO;
+
     @PostMapping(value = "/saveEmployee")
-    public ResponseEntity saveEmployee(@RequestBody EmployeeDTO employeeDTO){
+    public ResponseEntity saveEmployee(@Valid @RequestBody EmployeeDTO employeeDTO){
 
     try {
         String response = employeeService.saveEmployee(employeeDTO);
@@ -36,6 +41,11 @@ public class EmployeeController {
         }else if(response.equals("06")){
             responseDTO.setCode(VarList.RSP_DUPLICATED);
             responseDTO.setMessage("Employee already registered");
+            responseDTO.setContent(employeeDTO);
+            return new ResponseEntity(responseDTO, HttpStatus.BAD_REQUEST);
+        }else if(response.equals("08")){
+            responseDTO.setCode(VarList. RSP_DATA_NULL);
+            responseDTO.setMessage("Data can not be null");
             responseDTO.setContent(employeeDTO);
             return new ResponseEntity(responseDTO, HttpStatus.BAD_REQUEST);
         }else{
@@ -54,7 +64,7 @@ public class EmployeeController {
 
     //update Employee
     @PutMapping(value = "/updateEmployee")
-    public ResponseEntity updateEmployee(@RequestBody EmployeeDTO employeeDTO){
+    public ResponseEntity updateEmployee(@Valid @RequestBody EmployeeDTO employeeDTO){
         try {
             String response = employeeService.updateEmployee(employeeDTO);
 
